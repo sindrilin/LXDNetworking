@@ -1,0 +1,6 @@
+framework module Pods_LXDNetworking_Tests {
+  umbrella header "Pods-LXDNetworking_Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}

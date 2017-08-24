@@ -1,0 +1,27 @@
+{
+  "name": "LXDNetworking",
+  "version": "0.1.0",
+  "summary": "A short description of LXDNetworking.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/linxinda/LXDNetworking",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "linxinda": "linxinda@didichuxing.com"
+  },
+  "source": {
+    "git": "https://github.com/linxinda/LXDNetworking.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "LXDNetworking/Classes/**/*",
+  "dependencies": {
+    "AFNetworking": [
+      "~> 3.1.0"
+    ]
+  }
+}

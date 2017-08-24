@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'LXDNetworking'
-  s.version          = '0.1.0'
+  s.version          = '1.0.0'
   s.summary          = 'A short description of LXDNetworking.'
 
 # This description is used to generate tags and improve search results.
@@ -32,6 +32,8 @@ TODO: Add long description of the pod here.
 
   s.source_files = 'LXDNetworking/Classes/**/*'
   
+  s.dependency 'AFNetworking', '~> 3.1.0'
+  
   # s.resource_bundles = {
   #   'LXDNetworking' => ['LXDNetworking/Assets/*.png']
   # }
@@ -40,3 +42,5 @@ TODO: Add long description of the pod here.
   # s.frameworks = 'UIKit', 'MapKit'
   # s.dependency 'AFNetworking', '~> 2.3'
 end
+
+

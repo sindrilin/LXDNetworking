@@ -1,11 +1,15 @@
 use_frameworks!
 
 target 'LXDNetworking_Example' do
+  platform :ios, ‘7.0’
   pod 'LXDNetworking', :path => '../'
 
   target 'LXDNetworking_Tests' do
+  platform :ios, ‘7.0’
     inherit! :search_paths
 
     
   end
 end
+
+
