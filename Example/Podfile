@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'LXDNetworking_Example' do
+  pod 'LXDNetworking', :path => '../'
+
+  target 'LXDNetworking_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
