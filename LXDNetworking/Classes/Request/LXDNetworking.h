@@ -12,10 +12,12 @@
 
 #if __has_include(<LXDNetworking/LXDBaseApi.h>)
 #import <LXDNetworking/LXDRequest.h>
+#import <LXDNetworking/LXDUploadApi.h>
 #import <LXDNetworking/LXDPageBaseApi.h>
 #else
 #import "LXDBaseApi.h"
 #import "LXDRequest.h"
+#import "LXDUploadApi.h"
 #import "LXDPageBaseApi.h"
 #endif
 

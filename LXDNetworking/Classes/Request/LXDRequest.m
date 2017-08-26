@@ -7,7 +7,7 @@
 //
 
 #import "LXDRequest.h"
-#import "LXDBaseApi.h"
+#import "LXDUploadApi.h"
 #import <AFNetworking/AFNetworking.h>
 
 
@@ -149,6 +149,36 @@ static AFNetworkReachabilityStatus lxd_network_status = AFNetworkReachabilitySta
     dispatch_semaphore_signal(__queue_lock());
 }
 
++ (void)uploadApi: (LXDUploadApi *)api
+           cancel: (__nullable LXDRequestCancel)cancel
+         complete: (LXDRequestComplete)complete {
+    [self uploadApi: api progress: nil cancel: cancel complete: complete];
+}
+
++ (void)uploadApi: (LXDUploadApi *)api
+         progress: (LXDUploadProgress)progress
+           cancel: (__nullable LXDRequestCancel)cancel
+         complete: (LXDRequestComplete)complete {
+    if (lxd_network_status == AFNetworkReachabilityStatusUnknown ||
+        lxd_network_status == AFNetworkReachabilityStatusNotReachable) {
+        if (cancel) {  cancel(api); }
+        return;
+    }
+    
+    dispatch_semaphore_wait(__queue_lock(), DISPATCH_TIME_FOREVER);
+    
+    NSMutableArray *apiQueue = __api_queue();
+    NSInteger idx = [apiQueue indexOfObject: api];
+    [self _cancelTaskAtIndex: idx];
+    
+    LXDRequestTask *task = [[LXDRequestTask alloc] initWithApi: api
+                                                        cancel: cancel
+                                                      complete: complete];
+    [self _postRequestTaskToManager: task progress: progress];
+    
+    dispatch_semaphore_signal(__queue_lock());
+}
+
 + (void)cancelApi: (Class)apiCls {
     dispatch_semaphore_wait(__queue_lock(), DISPATCH_TIME_FOREVER);
     
@@ -177,6 +207,33 @@ static AFNetworkReachabilityStatus lxd_network_status = AFNetworkReachabilitySta
     policy.validatesDomainName = NO;
     manager.securityPolicy = policy;
     return manager;
+}
+
++ (void)_postRequestTaskToManager: (LXDRequestTask *)task progress: (LXDUploadProgress)progress  {
+    
+    AFHTTPSessionManager *manager = [self _getRequestManagerInstanceWithApi: task.api];
+    LXDRequestComplete complete = ^(id data, NSError *error) {
+        dispatch_semaphore_wait(__queue_lock(), DISPATCH_TIME_FOREVER);
+        [__api_queue() removeObject: task];
+        dispatch_semaphore_signal(__queue_lock());
+        [task completeWithData: data error: error];
+    };
+    
+    [manager POST: task.api.url parameters: task.api.params constructingBodyWithBlock: ^(id<AFMultipartFormData>  _Nonnull formData) {
+        for (LXDUploadFile *file in ((LXDUploadApi *)task.api).uploadFiles) {
+            [formData appendPartWithFileData: file.file name: file.paramName fileName: file.fileName mimeType: file.mimeType];
+        }
+    } progress: ^(NSProgress * _Nonnull uploadProgress) {
+        if (task.isCanceled) {
+            [uploadProgress cancel];
+        } else if (progress) {
+            progress(task.api, ((double)uploadProgress.completedUnitCount / (double)uploadProgress.totalUnitCount));
+        }
+    } success: ^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        complete(responseObject, nil);
+    } failure: ^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        complete(nil, error);
+    }];
 }
 
 + (void)_sendRequestTaskToManager: (LXDRequestTask *)task {
