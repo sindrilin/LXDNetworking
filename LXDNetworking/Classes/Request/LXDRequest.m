@@ -55,7 +55,7 @@ static inline dispatch_semaphore_t __queue_lock() {
 @implementation LXDRequestTask
 
 
-static AFNetworkReachabilityStatus lxd_network_status;
+static AFNetworkReachabilityStatus lxd_network_status = AFNetworkReachabilityStatusReachableViaWiFi;
 + (void)initialize {
     AFNetworkReachabilityManager * manager = [AFNetworkReachabilityManager sharedManager];
     lxd_network_status = manager.networkReachabilityStatus;
@@ -131,9 +131,8 @@ static AFNetworkReachabilityStatus lxd_network_status;
           complete: (LXDRequestComplete)complete {
     if (lxd_network_status == AFNetworkReachabilityStatusUnknown ||
         lxd_network_status == AFNetworkReachabilityStatusNotReachable) {
-        if (cancel) {
-            cancel(api);
-        }
+        if (cancel) {  cancel(api); }
+        return;
     }
     
     dispatch_semaphore_wait(__queue_lock(), DISPATCH_TIME_FOREVER);
