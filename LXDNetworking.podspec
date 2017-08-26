@@ -8,8 +8,8 @@
 
 Pod::Spec.new do |s|
   s.name             = 'LXDNetworking'
-  s.version          = '1.0.0'
-  s.summary          = 'A short description of LXDNetworking.'
+  s.version          = '1.0.1'
+  s.summary          = 'A library base on AFNetworking.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -21,16 +21,16 @@ Pod::Spec.new do |s|
 TODO: Add long description of the pod here.
                        DESC
 
-  s.homepage         = 'http://github.com:sindrilin/LXDNetworking.git'
+  s.homepage         = 'https://github.com/sindrilin/LXDNetworking.git'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'linxinda' => 'linxinda@didichuxing.com' }
-  s.source           = { :git => 'http://github.com:sindrilin/LXDNetworking.git', :tag => s.version.to_s }
+  s.author           = { 'linxinda' => 'codersindri@gmail.com' }
+  s.source           = { :git => 'https://github.com/sindrilin/LXDNetworking.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '8.0'
-
   s.source_files = 'LXDNetworking/Classes/**/*'
+  s.public_header_files = 'LXDNetworking/Classes/**/*.h'
   
   s.dependency 'AFNetworking', '~> 3.1.0'
   

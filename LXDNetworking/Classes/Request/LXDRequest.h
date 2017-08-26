@@ -10,6 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern NSString *const LXDLoseConnectNotification;
+
 @class LXDBaseApi;
 typedef void(^LXDRequestCancel)(LXDBaseApi *api);
 typedef void(^LXDRequestComplete)(__nullable id data, NSError * __nullable error);

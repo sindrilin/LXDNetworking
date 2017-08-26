@@ -11,6 +11,9 @@
 #import <AFNetworking/AFNetworking.h>
 
 
+NSString *const LXDLoseConnectNotification = @"LXDLoseConnectNotification";
+
+
 #pragma mark - Queue & Lock & Manager
 static inline NSMutableArray *__api_queue() {
     static NSMutableArray *__api_queue;
@@ -51,6 +54,25 @@ static inline dispatch_semaphore_t __queue_lock() {
 
 @implementation LXDRequestTask
 
+
+static AFNetworkReachabilityStatus lxd_network_status;
++ (void)initialize {
+    AFNetworkReachabilityManager * manager = [AFNetworkReachabilityManager sharedManager];
+    lxd_network_status = manager.networkReachabilityStatus;
+    [manager setReachabilityStatusChangeBlock: ^(AFNetworkReachabilityStatus status) {
+        lxd_network_status = status;
+        switch (status) {
+            case AFNetworkReachabilityStatusUnknown:
+            case AFNetworkReachabilityStatusNotReachable:
+                [[NSNotificationCenter defaultCenter] postNotificationName: LXDLoseConnectNotification object: nil];
+                break;
+                
+            default:
+                break;
+        }
+    }];
+    [manager startMonitoring];
+}
 
 - (instancetype)initWithApi: (LXDBaseApi *)api
                      cancel: (LXDRequestCancel)cancel
@@ -107,6 +129,11 @@ static inline dispatch_semaphore_t __queue_lock() {
 + (void)requestApi: (LXDBaseApi *)api
             cancel: (LXDRequestCancel)cancel
           complete: (LXDRequestComplete)complete {
+    if (lxd_network_status == AFNetworkReachabilityStatusUnknown ||
+        lxd_network_status == AFNetworkReachabilityStatusNotReachable) {
+        cancel(api);
+    }
+    
     dispatch_semaphore_wait(__queue_lock(), DISPATCH_TIME_FOREVER);
     
     NSMutableArray *apiQueue = __api_queue();
