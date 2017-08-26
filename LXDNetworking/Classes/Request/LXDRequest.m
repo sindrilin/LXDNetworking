@@ -131,7 +131,9 @@ static AFNetworkReachabilityStatus lxd_network_status;
           complete: (LXDRequestComplete)complete {
     if (lxd_network_status == AFNetworkReachabilityStatusUnknown ||
         lxd_network_status == AFNetworkReachabilityStatusNotReachable) {
-        cancel(api);
+        if (cancel) {
+            cancel(api);
+        }
     }
     
     dispatch_semaphore_wait(__queue_lock(), DISPATCH_TIME_FOREVER);
