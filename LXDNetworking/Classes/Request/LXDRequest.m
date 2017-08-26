@@ -172,9 +172,6 @@ static AFNetworkReachabilityStatus lxd_network_status = AFNetworkReachabilitySta
 
 + (AFHTTPSessionManager *)_commonRequestManager {
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects: @"application/json", @"text/html", @"multipart/form-data", @"image/png", nil];
-    manager.requestSerializer.timeoutInterval = 30;
-    
     AFSecurityPolicy * policy = [AFSecurityPolicy defaultPolicy];
     policy.allowInvalidCertificates = YES;
     policy.validatesDomainName = NO;
@@ -225,6 +222,8 @@ static AFNetworkReachabilityStatus lxd_network_status = AFNetworkReachabilitySta
                 manager = [LXDRequest _commonRequestManager];
                 manager.requestSerializer = [AFJSONRequestSerializer serializer];
                 manager.responseSerializer = [AFJSONResponseSerializer serializer];
+                manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects: @"application/json", @"text/html", @"multipart/form-data", @"image/png", nil];
+                manager.requestSerializer.timeoutInterval = 30;
             });
             return manager;
         };
@@ -239,6 +238,8 @@ static AFNetworkReachabilityStatus lxd_network_status = AFNetworkReachabilitySta
                 manager = [LXDRequest _commonRequestManager];
                 manager.requestSerializer = [AFJSONRequestSerializer serializer];
                 manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+                manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects: @"application/json", @"text/html", @"multipart/form-data", @"image/png", nil];
+                manager.requestSerializer.timeoutInterval = 30;
             });
             return manager;
         };
@@ -253,6 +254,8 @@ static AFNetworkReachabilityStatus lxd_network_status = AFNetworkReachabilitySta
                 manager = [LXDRequest _commonRequestManager];
                 manager.requestSerializer = [AFHTTPRequestSerializer serializer];
                 manager.responseSerializer = [AFJSONResponseSerializer serializer];
+                manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects: @"application/json", @"text/html", @"multipart/form-data", @"image/png", nil];
+                manager.requestSerializer.timeoutInterval = 30;
             });
             return manager;
         };
@@ -267,6 +270,8 @@ static AFNetworkReachabilityStatus lxd_network_status = AFNetworkReachabilitySta
                 manager = [LXDRequest _commonRequestManager];
                 manager.requestSerializer = [AFHTTPRequestSerializer serializer];
                 manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+                manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects: @"application/json", @"text/html", @"multipart/form-data", @"image/png", nil];
+                manager.requestSerializer.timeoutInterval = 30;
             });
             return manager;
         };
