@@ -19,6 +19,10 @@
     return @{};
 }
 
+- (NSDictionary *)headers {
+    return nil;
+}
+
 - (LXDRequestType)requestType {
     return LXDRequestTypeJSON;
 }

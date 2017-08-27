@@ -269,6 +269,15 @@ static AFNetworkReachabilityStatus lxd_network_status = AFNetworkReachabilitySta
     typedef AFHTTPSessionManager *(^LXDManagerGenerator)(LXDBaseApi * api);
     
     NSInteger apiType = (api.requestType | api.responseType);
+    void (^configManager)(AFHTTPSessionManager *manager) = ^(AFHTTPSessionManager *manager){
+        manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects: @"application/json", @"text/html", @"multipart/form-data", @"image/png", nil];
+        manager.requestSerializer.timeoutInterval = 30;
+        if (api.headers) {
+            for (NSString *headField in api.headers) {
+                [manager.requestSerializer setValue: api.headers[headField] forHTTPHeaderField: headField];
+            }
+        }
+    };
     
     if (apiType == (LXDRequestTypeJSON | LXDResponseTypeJSON)) {
         
@@ -279,8 +288,7 @@ static AFNetworkReachabilityStatus lxd_network_status = AFNetworkReachabilitySta
                 manager = [LXDRequest _commonRequestManager];
                 manager.requestSerializer = [AFJSONRequestSerializer serializer];
                 manager.responseSerializer = [AFJSONResponseSerializer serializer];
-                manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects: @"application/json", @"text/html", @"multipart/form-data", @"image/png", nil];
-                manager.requestSerializer.timeoutInterval = 30;
+                configManager(manager);
             });
             return manager;
         };
@@ -295,8 +303,7 @@ static AFNetworkReachabilityStatus lxd_network_status = AFNetworkReachabilitySta
                 manager = [LXDRequest _commonRequestManager];
                 manager.requestSerializer = [AFJSONRequestSerializer serializer];
                 manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-                manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects: @"application/json", @"text/html", @"multipart/form-data", @"image/png", nil];
-                manager.requestSerializer.timeoutInterval = 30;
+                configManager(manager);
             });
             return manager;
         };
@@ -311,8 +318,7 @@ static AFNetworkReachabilityStatus lxd_network_status = AFNetworkReachabilitySta
                 manager = [LXDRequest _commonRequestManager];
                 manager.requestSerializer = [AFHTTPRequestSerializer serializer];
                 manager.responseSerializer = [AFJSONResponseSerializer serializer];
-                manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects: @"application/json", @"text/html", @"multipart/form-data", @"image/png", nil];
-                manager.requestSerializer.timeoutInterval = 30;
+                configManager(manager);
             });
             return manager;
         };
@@ -327,8 +333,7 @@ static AFNetworkReachabilityStatus lxd_network_status = AFNetworkReachabilitySta
                 manager = [LXDRequest _commonRequestManager];
                 manager.requestSerializer = [AFHTTPRequestSerializer serializer];
                 manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-                manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects: @"application/json", @"text/html", @"multipart/form-data", @"image/png", nil];
-                manager.requestSerializer.timeoutInterval = 30;
+                configManager(manager);
             });
             return manager;
         };

@@ -49,6 +49,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) NSDictionary *params;
 
 /*!
+ *  @property   headers
+ *  请求头
+ */
+@property (nonatomic, readonly) NSDictionary *headers;
+
+/*!
  *  @property   requestType
  *  请求参数包装格式
  */
