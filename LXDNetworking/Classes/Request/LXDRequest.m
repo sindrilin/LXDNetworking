@@ -245,6 +245,11 @@ static AFNetworkReachabilityStatus lxd_network_status = AFNetworkReachabilitySta
         dispatch_semaphore_signal(__queue_lock());
         [task completeWithData: data error: error];
     };
+    if (task.api.headers) {
+        for (NSString *headField in task.api.headers) {
+            [manager.requestSerializer setValue: task.api.headers[headField] forHTTPHeaderField: headField];
+        }
+    }
     
     switch (task.api.requestMethod) {
         case LXDRequestMethodGet: {
@@ -272,11 +277,6 @@ static AFNetworkReachabilityStatus lxd_network_status = AFNetworkReachabilitySta
     void (^configManager)(AFHTTPSessionManager *manager) = ^(AFHTTPSessionManager *manager){
         manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects: @"application/json", @"text/html", @"multipart/form-data", @"image/png", nil];
         manager.requestSerializer.timeoutInterval = 30;
-        if (api.headers) {
-            for (NSString *headField in api.headers) {
-                [manager.requestSerializer setValue: api.headers[headField] forHTTPHeaderField: headField];
-            }
-        }
     };
     
     if (apiType == (LXDRequestTypeJSON | LXDResponseTypeJSON)) {
