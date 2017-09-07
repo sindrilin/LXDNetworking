@@ -10,7 +10,6 @@
 
 
 
-
 NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *const LXDLoseConnectNotification;
@@ -57,6 +56,12 @@ typedef void(^LXDRequestComplete)(__nullable id data, NSError * __nullable error
  *  取消一个网络请求，只需要传入类名即可
  */
 + (void)cancelApi: (Class)apiCls;
+
+/*!
+ *  @method enabledLog:
+ *  设置是否请求完成后输出日志信息
+ */
++ (void)setEnabledLog: (BOOL)enabledLog;
 
 @end
 

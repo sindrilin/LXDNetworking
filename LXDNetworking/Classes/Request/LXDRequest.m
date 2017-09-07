@@ -125,6 +125,10 @@ static AFNetworkReachabilityStatus lxd_network_status = AFNetworkReachabilitySta
 @implementation LXDRequest
 
 
+#pragma mark - Static
+static BOOL lxd_enabled_log = NO;
+
+
 #pragma mark - Public
 + (void)requestApi: (LXDBaseApi *)api
             cancel: (LXDRequestCancel)cancel
@@ -190,8 +194,31 @@ static AFNetworkReachabilityStatus lxd_network_status = AFNetworkReachabilitySta
     dispatch_semaphore_signal(__queue_lock());
 }
 
++ (void)setEnabledLog: (BOOL)enabledLog {
+    lxd_enabled_log = enabledLog;
+}
+
 
 #pragma mark - Private
++ (void)_logIfNeeded: (LXDBaseApi *)api responseObject: (id)responseObject {
+    if (!lxd_enabled_log) { return; }
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString *outputString = @"null";
+        if ([responseObject isKindOfClass: [NSDictionary class]] || [responseObject isKindOfClass: [NSArray class]]) {
+            NSData *data = [NSJSONSerialization dataWithJSONObject: responseObject options: NSJSONWritingPrettyPrinted error: nil];
+            outputString = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
+        } else if ([responseObject isKindOfClass: [NSData class]]) {
+            outputString = [[NSString alloc] initWithData: responseObject encoding: NSUTF8StringEncoding];
+        }
+        
+        printf("\n");
+        printf("request url: %s", api.url.UTF8String);
+        printf("request data: %s", outputString.UTF8String);
+        printf("\n");
+    });
+}
+
 + (void)_cancelTaskAtIndex: (NSInteger)idx {
     if (idx != NSNotFound) {
         LXDRequestTask *task = __api_queue()[idx];

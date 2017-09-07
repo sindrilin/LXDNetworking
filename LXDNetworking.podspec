@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'LXDNetworking'
-  s.version          = '1.0.7'
+  s.version          = '1.0.9'
   s.summary          = 'A library base on AFNetworking.'
 
 # This description is used to generate tags and improve search results.
