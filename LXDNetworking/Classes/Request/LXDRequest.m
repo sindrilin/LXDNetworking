@@ -281,6 +281,7 @@ static BOOL lxd_enabled_log = NO;
     switch (task.api.requestMethod) {
         case LXDRequestMethodGet: {
             [manager GET: task.api.url parameters: task.api.params progress: nil success: ^(NSURLSessionDataTask * _Nonnull dataTask, id  _Nullable responseObject) {
+                [self _logIfNeeded: task.api responseObject: responseObject];
                 complete(responseObject, nil);
             } failure: ^(NSURLSessionDataTask * _Nullable dataTask, NSError * _Nonnull error) {
                 complete(nil, error);
@@ -289,6 +290,7 @@ static BOOL lxd_enabled_log = NO;
             
         case LXDRequestMethodPost: {
             [manager POST: task.api.url parameters: task.api.params progress: nil success: ^(NSURLSessionDataTask * _Nonnull dataTask, id  _Nullable responseObject) {
+                [self _logIfNeeded: task.api responseObject: responseObject];
                 complete(responseObject, nil);
             } failure: ^(NSURLSessionDataTask * _Nullable dataTask, NSError * _Nonnull error) {
                 complete(nil, error);
