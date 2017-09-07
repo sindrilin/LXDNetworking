@@ -212,10 +212,13 @@ static BOOL lxd_enabled_log = NO;
             outputString = [[NSString alloc] initWithData: responseObject encoding: NSUTF8StringEncoding];
         }
         
-        printf("\n");
-        printf("request url: %s", api.url.UTF8String);
-        printf("request data: %s", outputString.UTF8String);
-        printf("\n");
+        NSData *data = [NSJSONSerialization dataWithJSONObject: api.params options: NSJSONWritingPrettyPrinted error: nil];
+        
+        printf("\n===============================智障退散===============================\n");
+        printf("请求链接: %s\n", api.url.UTF8String);
+        printf("请求参数: %s\n", [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding].UTF8String);
+        printf("返回数据: %s", outputString.UTF8String);
+        printf("\n======================================================================\n");
     });
 }
 
