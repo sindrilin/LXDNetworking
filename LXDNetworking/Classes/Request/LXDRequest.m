@@ -135,7 +135,7 @@ static BOOL lxd_enabled_log = NO;
           complete: (LXDRequestComplete)complete {
     if (lxd_network_status == AFNetworkReachabilityStatusUnknown ||
         lxd_network_status == AFNetworkReachabilityStatusNotReachable) {
-        if (cancel) {  cancel(api); }
+        complete(nil, [NSError errorWithDomain: @"无网络连接" code: -10086 userInfo: nil]);
         return;
     }
     
@@ -165,7 +165,7 @@ static BOOL lxd_enabled_log = NO;
          complete: (LXDRequestComplete)complete {
     if (lxd_network_status == AFNetworkReachabilityStatusUnknown ||
         lxd_network_status == AFNetworkReachabilityStatusNotReachable) {
-        if (cancel) {  cancel(api); }
+        complete(nil, [NSError errorWithDomain: @"无网络连接" code: -10086 userInfo: nil]);
         return;
     }
     
